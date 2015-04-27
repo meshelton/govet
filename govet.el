@@ -43,8 +43,8 @@
   "Run govet on the current file and populate the fix list. Pressing C-x ` will jump directly to the line in your code which caused the first message."
   (interactive)
   (compilation-start
-   (mapconcat #'shell-quote-argument
-              (list "go vet" (expand-file-name buffer-file-name)) " ")
+   (concat "go vet " (mapconcat #'shell-quote-argument
+                               (list (expand-file-name buffer-file-name)) " "))
    'govet-mode))
 
 (provide 'govet)
