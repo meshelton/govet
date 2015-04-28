@@ -4,16 +4,16 @@
 
 ;;; Commentary:
 
-;; To install golint, add the following lines to your .emacs file:
+;; To install govet.el, add the following lines to your .emacs file:
 ;;   (add-to-list 'load-path "PATH CONTAINING govet.el" t)
-;;   (require 'golint)
+;;   (require 'govet)
 ;;
-;; After this, type M-x golint on Go source code.
+;; After this, type M-x govet on Go source code.
 ;;
 ;; Usage:
 ;;   C-x `
 ;;     Jump directly to the line in your code which caused the first message.
-;; 
+;;
 ;;   For more usage, see Compilation-Mode:
 ;;     http://www.gnu.org/software/emacs/manual/html_node/emacs/Compilation-Mode.html
 
@@ -23,8 +23,7 @@
 ;;; Code:
 (require 'compile)
 
-(defun go-vet-buffer-name (mode) 
- "*Govet*") 
+(defvar govet-setup-hook nil)
 
 (defun govet-process-setup ()
   "Setup compilation variables and buffer for `govet'."
@@ -36,15 +35,17 @@
   (set (make-local-variable 'compilation-disable-input) t)
   (set (make-local-variable 'compilation-process-setup-function)
        'govet-process-setup)
-)
+  )
 
 ;;;###autoload
 (defun govet ()
-  "Run govet on the current file and populate the fix list. Pressing C-x ` will jump directly to the line in your code which caused the first message."
+  "Run govet on the current file and populate the fix list.
+Pressing \\[next-error] will jump directly to the line in your
+code which caused the first message."
   (interactive)
   (compilation-start
    (concat "go vet " (mapconcat #'shell-quote-argument
-                               (list (expand-file-name buffer-file-name)) " "))
+                                (list (expand-file-name buffer-file-name)) " "))
    'govet-mode))
 
 (provide 'govet)
